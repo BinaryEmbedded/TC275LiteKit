@@ -29,6 +29,32 @@
 #include "IfxScuWdt.h"
 #include "IfxPort.h"
 #include "IfxPort_PinMap.h"
+#include "DrvStm.h"
+
+
+typedef struct
+{
+    float fPllFreq;
+
+    float fSourceFreq;
+
+    float fSriFreq;
+    float fSpbFreq;
+
+    float fCpu0Freq;
+    float fCpu1Freq;
+    float fCpu2Freq;
+    
+    float fFsiFreq;
+    float fFsi2Freq;
+
+    float fStmFreq;
+    float fGtmFreq;
+
+    float fCanFreq;   
+}ClockSetting;
+
+ClockSetting ClockSettingInfo;
 
 IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
@@ -49,7 +75,27 @@ int core0_main(void)
     /*P00_5    Digital Output*/
     IfxPort_setPinModeOutput(IfxPort_P00_5.port, IfxPort_P00_5.pinIndex, IfxPort_OutputMode_pushPull, IfxPort_OutputIdx_general);
     IfxPort_setPinLow(IfxPort_P00_5.port, IfxPort_P00_5.pinIndex);
+
+    ClockSettingInfo.fPllFreq = IfxScuCcu_getPllFrequency();
+    ClockSettingInfo.fSourceFreq = IfxScuCcu_getSourceFrequency();
+
+    ClockSettingInfo.fSriFreq = IfxScuCcu_getSriFrequency(); 
+    ClockSettingInfo.fSpbFreq = IfxScuCcu_getSpbFrequency(); 
+
+    ClockSettingInfo.fCpu0Freq = IfxScuCcu_getCpuFrequency(0); 
+    ClockSettingInfo.fCpu1Freq = IfxScuCcu_getCpuFrequency(1); 
+    ClockSettingInfo.fCpu2Freq = IfxScuCcu_getCpuFrequency(2); 
     
+    ClockSettingInfo.fFsiFreq = IfxScuCcu_getFsiFrequency(); 
+    ClockSettingInfo.fFsi2Freq = IfxScuCcu_getFsi2Frequency(); 
+
+    ClockSettingInfo.fStmFreq = IfxScuCcu_getStmFrequency(); 
+    ClockSettingInfo.fGtmFreq = IfxScuCcu_getGtmFrequency(); 
+
+    ClockSettingInfo.fCanFreq = IfxScuCcu_getCanFrequency(); 
+
+    DrvStmInit();
+
     while(1)
     {
         
