@@ -1,0 +1,6 @@
+TC275_Project.launch
+.cproject
+.project
+Debug/*
+.settings/*
+Libraries/pinmapper.pincfg
