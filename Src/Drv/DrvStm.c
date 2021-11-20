@@ -34,6 +34,8 @@ static void DrvStm0Init(void);
 /*----------------------------------------------------------------*/
 STM_INFO gstnuStmInfo;
 unsigned long ulnuStmCnt = 0u;
+
+void (*DrvStm0CallbackFnc)(void);
 /*----------------------------------------------------------------*/
 /*                        Functions                                    */
 /*----------------------------------------------------------------*/
@@ -47,7 +49,14 @@ void STM_Int0Handler(void)
     IfxStm_clearCompareFlag(gstnuStmInfo.stmSfr, gstnuStmInfo.stmConfig.comparator);
     IfxStm_increaseCompare(gstnuStmInfo.stmSfr, gstnuStmInfo.stmConfig.comparator, STM_TIME_1MS);
 
-    ulnuStmCnt++;
+    /*Stm Collback Function*/
+    DrvStm0CallbackFnc();
+}
+
+/*---------------------Callback Function--------------------------*/
+void DrvRegStm0CallbackFnc(void (*pDrvRegCallbackFnc)(void))
+{
+    DrvStm0CallbackFnc = pDrvRegCallbackFnc;
 }
 
 /*---------------------Init Function--------------------------*/

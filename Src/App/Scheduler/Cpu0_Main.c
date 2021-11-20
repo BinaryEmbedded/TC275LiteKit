@@ -30,8 +30,11 @@
 #include "IfxPort.h"
 #include "IfxPort_PinMap.h"
 #include "DrvStm.h"
+#include "DrvGtm.h"
+#include "Scheduler.h"
 
-/* Test */
+static void GetClockInfo(void);
+
 typedef struct
 {
     float fPllFreq;
@@ -76,6 +79,24 @@ int core0_main(void)
     IfxPort_setPinModeOutput(IfxPort_P00_5.port, IfxPort_P00_5.pinIndex, IfxPort_OutputMode_pushPull, IfxPort_OutputIdx_general);
     IfxPort_setPinLow(IfxPort_P00_5.port, IfxPort_P00_5.pinIndex);
 
+    /*STM Driver Init*/
+    DrvStmInit();
+
+    /*GTM Driver Init*/
+    DrvGtmInit();
+
+    /*Scheduler Init*/
+    Scheduler_Init();
+
+    while(1)
+    {
+        Scheduler();
+    }
+    return (1);
+}
+
+static void GetClockInfo(void)
+{
     ClockSettingInfo.fPllFreq = IfxScuCcu_getPllFrequency();
     ClockSettingInfo.fSourceFreq = IfxScuCcu_getSourceFrequency();
 
@@ -93,12 +114,4 @@ int core0_main(void)
     ClockSettingInfo.fGtmFreq = IfxScuCcu_getGtmFrequency(); 
 
     ClockSettingInfo.fCanFreq = IfxScuCcu_getCanFrequency(); 
-
-    DrvStmInit();
-
-    while(1)
-    {
-        
-    }
-    return (1);
 }
