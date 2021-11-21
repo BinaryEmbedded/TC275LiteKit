@@ -1,4 +1,4 @@
-TC275_Project.launch
+*.launch
 .cproject
 .project
 Debug/*
